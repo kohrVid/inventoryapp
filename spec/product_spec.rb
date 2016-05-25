@@ -84,17 +84,21 @@ class ProductSpec < MiniTest::Spec
       it "should deduct 1 from stock_level whenever an item is sold" do
 	Product.add(@product)
 	original_stock = @product.stock_level
-	@product.sold
+	@product.sold(1)
 	@product.stock_level.wont_equal original_stock
         @product.stock_level.must_equal original_stock - 1
       end
 
       it "should alert the retailer if the stock level falls below 10" do
 	Product.add(@product2)
-	3.times do
-	  @product2.sold
-	end
-	proc{ @product2.sold }.must_raise "Running low on stock"
+	proc{ @product2.sold(4) }.must_output "Running low on stock - ordered more stock\n"
+	@product2.stock_level.must_equal 29
+      end
+
+      it "should not allow items with stock levels of 0 to be sold" do
+	Product.add(@product2)
+	proc { @product2.sold(14) }.must_output "Item is out of stock\n"
+	@product2.stock_level.must_equal 13
       end
     end
   end
