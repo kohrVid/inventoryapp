@@ -14,7 +14,7 @@ class ProductSpec < MiniTest::Spec
   end
 
   describe Product do
-    it "should have an auto-generated ID" do
+    it "should have a unique auto-generated ID" do
       @product.id.wont_be_nil
       @product2.id.wont_be_nil
       @product.id.wont_equal @product2.id
@@ -77,6 +77,24 @@ class ProductSpec < MiniTest::Spec
 	Product.add(@product2)
 	Product.delete_all
 	Product.count.must_equal 0
+      end
+    end
+    
+    describe "Event-driven sales actions" do
+      it "should deduct 1 from stock_level whenever an item is sold" do
+	Product.add(@product)
+	original_stock = @product.stock_level
+	@product.sold
+	@product.stock_level.wont_equal original_stock
+        @product.stock_level.must_equal original_stock - 1
+      end
+
+      it "should alert the retailer if the stock level falls below 10" do
+	Product.add(@product2)
+	3.times do
+	  @product2.sold
+	end
+	proc{ @product2.sold }.must_raise "Running low on stock"
       end
     end
   end
