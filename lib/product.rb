@@ -28,4 +28,25 @@ class Product
     end
     on_stock_threshold_reached(10)
   end
+  
+  def loaned_to(customer)
+    if (self.stock_level - 1) <= 0
+      puts "Item is out of stock"
+    elsif customer.product_loaned == self
+      puts "You have already borrowed this item"
+    else
+      self.stock_level -= 1
+      customer.product_loaned = self
+    end
+    on_stock_threshold_reached(10)
+  end
+  
+  def returned_by(customer)
+    if customer.product_loaned != self
+      puts "You have not borrowed any new items"
+    else
+      self.stock_level += 1
+      customer.product_loaned = nil
+    end
+  end
 end

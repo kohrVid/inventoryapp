@@ -2,6 +2,7 @@ require "minitest/autorun"
 require "minitest/pride"
 require "./lib/product"
 require "./spec/helpers/product_helper"
+require "./spec/helpers/customer_helper"
 require "pry"
 
 class ProductSpec < MiniTest::Spec
@@ -112,12 +113,51 @@ class ProductSpec < MiniTest::Spec
     end
     
     describe "Event-driven loan actions" do
-      it "should deduct 1 from stock_level whenever an item is loaned" do
+      before do
+	Customer.delete_all
 	Product.add(@product)
+	@customer = CustomerHelper.customer2
+	Customer.add(@customer)
+      end
+      
+      it "should deduct 1 from stock_level whenever an item is loaned" do
 	original_stock = @product.stock_level
-	@product.loaned(@customer)
+	@product.loaned_to(@customer)
 	@product.stock_level.wont_equal original_stock
         @product.stock_level.must_equal original_stock - 1
+      end
+
+      it "should not allow customers to borrow the same item twice" do
+	original_stock = @product.stock_level
+	@product.loaned_to(@customer)
+	proc { @product.loaned_to(@customer) }.must_output "You have already borrowed this item\n"
+	@product.stock_level.wont_equal original_stock - 2
+        @product.stock_level.must_equal original_stock - 1
+      end
+    end
+    
+    describe "Event-driven return actions" do
+      before do
+	Customer.delete_all
+	@customer = CustomerHelper.customer
+	@product3 = @customer.product_loaned
+	Customer.add(@customer)
+      end
+      
+      it "should increment by 1 from stock_level whenever an item is returned" do
+	binding.pry
+	original_stock = @product3.stock_level
+	@product3.returned_by(@customer)
+	@product3.stock_level.wont_equal original_stock
+        @product3.stock_level.must_equal original_stock + 1
+      end
+
+      it "should not allow customers to return the same item twice" do
+	original_stock = @product3.stock_level
+	@product3.returned_by(@customer)
+	proc { @product3.returned_by(@customer) }.must_output "You have not borrowed any new items\n"
+	@product3.stock_level.wont_equal original_stock + 2
+        @product3.stock_level.must_equal original_stock + 1
       end
     end
   end

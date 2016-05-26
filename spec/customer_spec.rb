@@ -8,7 +8,7 @@ class CustomerSpec < MiniTest::Spec
   before do
     @customer = CustomerHelper.customer
     @customer2 = CustomerHelper.customer2
-    @product = Product.find(@customer.product_loaned)
+    @product = @customer.product_loaned
     Customer.delete_all
   end
 
@@ -28,9 +28,9 @@ class CustomerSpec < MiniTest::Spec
       @customer.phone_number.wont_be_nil
     end
 
-    it "should have a product ID stored once they have loaned a product" do
+    it "should have a product object stored once they have loaned a product" do
       Customer.add(@customer)
-      @customer.product_loaned.must_equal @product.id
+      @customer.product_loaned.must_equal @product
     end
     
     describe "CRUD methods" do

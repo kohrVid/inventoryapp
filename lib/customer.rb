@@ -18,5 +18,4 @@ class Customer
   def self.find_by_last_name(search_term)
     Customer.all.select {|customer| customer.class == Customer && customer.last_name.include?(search_term) }
   end
-
- end
+end
