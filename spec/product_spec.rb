@@ -110,5 +110,15 @@ class ProductSpec < MiniTest::Spec
 	@product2.stock_level.must_equal 13
       end
     end
+    
+    describe "Event-driven loan actions" do
+      it "should deduct 1 from stock_level whenever an item is loaned" do
+	Product.add(@product)
+	original_stock = @product.stock_level
+	@product.loaned(@customer)
+	@product.stock_level.wont_equal original_stock
+        @product.stock_level.must_equal original_stock - 1
+      end
+    end
   end
 end

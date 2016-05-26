@@ -12,10 +12,11 @@ class Customer
   end
 
   def self.find_by_first_name(search_term)
-    Product.all.select {|customer| customer.class == Customer && customer.first_name.include?(search_term) }
+    Customer.all.select {|customer| customer.class == Customer && customer.first_name.include?(search_term) }
   end
   
   def self.find_by_last_name(search_term)
-    Product.all.select {|customer| customer.class == Customer && customer.last_name.include?(search_term) }
+    Customer.all.select {|customer| customer.class == Customer && customer.last_name.include?(search_term) }
   end
+
  end

@@ -8,7 +8,7 @@ module Repository
 
   module ClassMethods
     def all
-      @@entries ||= []
+      @entries ||= []
     end
 
     def each
@@ -23,8 +23,16 @@ module Repository
       all.count
     end
 
+    def act_on_all_repository(item, &block)
+      this_class = item.class
+      while this_class.included_modules.include?(Repository)
+	block.call(this_class, item)
+	this_class = this_class.superclass
+      end
+    end
+
     def add(item)
-      all << item
+     act_on_all_repository(item) { |this_class, i| this_class.all << i }
     end
 
     def find(id)
@@ -37,20 +45,26 @@ module Repository
 
     def save
       file = File.open("./entries.yml", "w")
+=begin
+      if load.select { |item|
+	item.instance_variables.map{|i| item.instand_variable_get(i)}
+      } == []
+	raise "#{self} already exists"
+	file.close
+      else
+=end
 	file.write(all.to_yaml)
 	file.close
+    #  end
     end
 
     def delete(id)
-      all.delete_if {|item| item.id == id}
-    end
-    
-    def delete_by_id(id)
-      all.delete_if {|item| item.id == id}
+      item = self.find(id)
+      act_on_all_repository(item) { |this_class, i| this_class.all.delete(item) }
     end
 
     def delete_all
-      @@entries = []
+      @entries = []
     end
   end
 end

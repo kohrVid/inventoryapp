@@ -2,13 +2,13 @@ require "minitest/autorun"
 require "minitest/pride"
 require "pry"
 require "./lib/customer"
-require "./spec/helpers/product_helper"
+require "./spec/helpers/customer_helper"
 
 class CustomerSpec < MiniTest::Spec
   before do
-    @product = ProductHelper.product
-    @customer = Customer.new({ first_name: "Alexas", last_name: "Krauss", email_address: "alexas@bitterrivals.us", phone_number: "0207-456-1234", product_loaned: @product.id })
-    @customer2 = Customer.new({ first_name: "Amelia", last_name: "Tan", email_address: "amelia.arsenic@angelspit.net", phone_number: "0207-456-1234", product_loaned: nil })
+    @customer = CustomerHelper.customer
+    @customer2 = CustomerHelper.customer2
+    @product = Product.find(@customer.product_loaned)
     Customer.delete_all
   end
 
@@ -29,11 +29,12 @@ class CustomerSpec < MiniTest::Spec
     end
 
     it "should have a product ID stored once they have loaned a product" do
+      Customer.add(@customer)
       @customer.product_loaned.must_equal @product.id
     end
     
     describe "CRUD methods" do
-      it "should save and load cds" do
+      it "should save and load customers" do
 	File.delete("./entries.yml") if File.exist?("./entries.yml")
 	original_count = Customer.count
 	Customer.add(@customer)
@@ -44,7 +45,7 @@ class CustomerSpec < MiniTest::Spec
 	File.exist?("./entries.yml").must_equal true
       end
 
-      it "should be able to delete a cd" do
+      it "should be able to delete a customer" do
 	Customer.add(@customer)
 	Customer.add(@customer2)
 	Customer.delete(@customer.id)
@@ -65,6 +66,7 @@ class CustomerSpec < MiniTest::Spec
       it "should be able to find customers by last name" do
 	Customer.add(@customer)
 	Customer.add(@customer2)
+	binding.pry
 	Customer.find_by_last_name("Ta").first.id.must_equal @customer2.id
       end
     end
