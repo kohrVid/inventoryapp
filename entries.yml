@@ -1,11 +1,15 @@
 ---
-- !ruby/object:Product
-  id: 100009
-  title: Some Girls Wander By Mistake
-  description: Compilation album
-  stock_level: 43
-- !ruby/object:Product
-  id: 100010
-  title: Juju
-  description: An 80s album
-  stock_level: 13
+- !ruby/object:Cd
+  id: 100005
+  title: Raspberry Beret
+  artist_name: Prince
+  description: Fun Prince song
+  release_date: 1985-05-15 00:00:00.000000000 +01:00
+  stock_level: 19
+- !ruby/object:Cd
+  id: 100006
+  title: Treats
+  artist_name: Sleigh Bells
+  description: Sleigh Bells' debut album
+  release_date: 2010-05-24 00:00:00.000000000 +01:00
+  stock_level: 25

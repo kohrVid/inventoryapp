@@ -8,7 +8,7 @@ module Repository
 
   module ClassMethods
     def all
-      @entries ||= []
+      @@entries ||= []
     end
 
     def each
@@ -31,22 +31,26 @@ module Repository
       all.select {|item| item.id == id }.first
     end
 
-    def save
-      file = File.open("./entries.yml", "w")
-      file.write(all.to_yaml)
-      file.close
-    end
-
     def load
       all = YAML.load_file("./entries.yml")
+    end
+
+    def save
+      file = File.open("./entries.yml", "w")
+	file.write(all.to_yaml)
+	file.close
     end
 
     def delete(id)
       all.delete_if {|item| item.id == id}
     end
+    
+    def delete_by_id(id)
+      all.delete_if {|item| item.id == id}
+    end
 
     def delete_all
-      @entries = []
+      @@entries = []
     end
   end
 end

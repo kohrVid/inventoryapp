@@ -1,12 +1,13 @@
 require "minitest/autorun"
 require "minitest/pride"
 require "./lib/product"
+require "./spec/helpers/product_helper"
 require "pry"
 
 class ProductSpec < MiniTest::Spec
   before do
-    @product = Product.new({title: "Some Girls Wander By Mistake", description: "Compilation album", stock_level: 43})
-    @product2 = Product.new({title: "Juju", description: "An 80s album", stock_level: 13})
+    @product = ProductHelper.product
+    @product2 = ProductHelper.product2
   end
 
   after do
@@ -38,6 +39,14 @@ class ProductSpec < MiniTest::Spec
 	Product.add(@product)
 	Product.count.must_equal original_count + 1
       end
+=begin
+      it "should raise an exception if a duplicate product is added" do
+	original_count = Product.count
+	Product.add(@product)
+	Product.add(@product).must_raise "Product already exists"
+	Product.all.count.must_equal original_count
+      end
+=end
 
       it "should be able to list all products" do
 	original_count = Product.count
