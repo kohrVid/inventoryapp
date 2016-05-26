@@ -7,7 +7,7 @@ class CdSpec < MiniTest::Spec
   before do
     @cd = Cd.new({ title: "Raspberry Beret", artist_name: "Prince", description: "Fun Prince song", release_date: Time.local(1985, 05, 15), stock_level: 19})
     @cd2 = Cd.new({ title: "Treats", artist_name: "Sleigh Bells", description: "Sleigh Bells' debut album", release_date: Time.local(2010, 05, 24), stock_level: 25})
-    Cd.delete_all
+    Product.delete_all
   end
 
   describe Cd do
@@ -41,7 +41,6 @@ class CdSpec < MiniTest::Spec
       it "should be able to find CDs by title" do
 	Cd.add(@cd)
 	Cd.add(@cd2)
-    binding.pry
 	Cd.find_by_title("Raspberry").first.id.must_equal @cd.id
       end
     end
