@@ -19,6 +19,10 @@ class Product
     end
   end
 
+  def self.find_by_letter(letter)
+    Product.all.select {|item| item.title.start_with?(letter) }
+  end
+
   def on_stock_threshold_reached(threshold)
     if self.stock_level < threshold
       self.stock_level += 20

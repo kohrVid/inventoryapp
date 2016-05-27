@@ -67,6 +67,13 @@ class ProductSpec < MiniTest::Spec
 	Product.find(@product.id).title.must_equal "Some Girls Wander By Mistake"
       end
 
+      it "should be able to search product titles alphabetically" do
+	Product.add(@product)
+	Product.add(@product2)
+	binding.pry
+	Product.find_by_letter("J").first.title.must_equal "Juju"
+      end
+
       it "should save and load products" do
 	File.delete("./entries.yml") if File.exist?("./entries.yml")
 	original_count = Product.count

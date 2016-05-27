@@ -36,6 +36,12 @@ class CdSpec < MiniTest::Spec
 	Cd.add(@cd2)
 	Cd.find_by_title("Raspberry").first.id.must_equal @cd.id
       end
+
+      it "should be able to search product titles alphabetically" do
+	Cd.add(@cd)
+	Cd.add(@cd2)
+	Cd.find_by_letter("R").first.title.must_equal "Raspberry Beret"
+      end
       
       it "should be possible to update a CD" do
 	Cd.add(@cd)
