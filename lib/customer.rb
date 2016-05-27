@@ -11,6 +11,12 @@ class Customer
     end
   end
 
+  def edit(params ={})
+    params.each do |k, v|
+      self.instance_variable_set "@#{k.to_s}", v
+    end
+  end
+
   def self.find_by_first_name(search_term)
     Customer.all.select {|customer| customer.class == Customer && customer.first_name.include?(search_term) }
   end

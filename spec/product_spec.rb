@@ -78,6 +78,13 @@ class ProductSpec < MiniTest::Spec
 	File.exist?("./entries.yml").must_equal true
       end
 
+      it "should be possible to update a product" do
+	Product.add(@product)
+	@product.edit({title: "Vision Thing", description: "One of their other albums"})
+	@product.title.must_equal "Vision Thing"
+	@product.description.must_equal "One of their other albums"
+      end
+
       it "should be able to delete a product" do
 	Product.add(@product)
 	Product.add(@product2)

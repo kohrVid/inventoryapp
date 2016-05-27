@@ -31,17 +31,24 @@ class CdSpec < MiniTest::Spec
 	File.exist?("./cd.yml").must_equal true
       end
 
+      it "should be able to find CDs by title" do
+	Cd.add(@cd)
+	Cd.add(@cd2)
+	Cd.find_by_title("Raspberry").first.id.must_equal @cd.id
+      end
+      
+      it "should be possible to update a CD" do
+	Cd.add(@cd)
+	@cd.edit({title: "7", description: "Really catchy song"})
+	@cd.title.must_equal "7"
+	@cd.description.must_equal "Really catchy song"
+      end
+
       it "should be able to delete a cd" do
 	Cd.add(@cd)
 	Cd.add(@cd2)
 	Cd.delete(@cd.id)
 	Cd.all.wont_include(@cd)
-      end
-
-      it "should be able to find CDs by title" do
-	Cd.add(@cd)
-	Cd.add(@cd2)
-	Cd.find_by_title("Raspberry").first.id.must_equal @cd.id
       end
     end
   end

@@ -13,6 +13,12 @@ class Product
     end
   end
 
+  def edit(params ={})
+    params.each do |k, v|
+      self.instance_variable_set "@#{k.to_s}", v
+    end
+  end
+
   def on_stock_threshold_reached(threshold)
     if self.stock_level < threshold
       self.stock_level += 20

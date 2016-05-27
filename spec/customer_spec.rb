@@ -45,6 +45,13 @@ class CustomerSpec < MiniTest::Spec
 	File.exist?("./customers.yml").must_equal true
       end
 
+      it "should be possible to update a customer" do
+	Customer.add(@customer)
+	@customer.edit({first_name: "Andrew", last_name: "Eldritch"})
+	@customer.first_name.must_equal "Andrew"
+	@customer.last_name.must_equal "Eldritch"
+      end
+
       it "should be able to delete a customer" do
 	Customer.add(@customer)
 	Customer.add(@customer2)
