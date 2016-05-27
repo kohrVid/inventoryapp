@@ -3,10 +3,13 @@ require "minitest/pride"
 require "./lib/product"
 require "./spec/helpers/product_helper"
 require "./spec/helpers/customer_helper"
+require "./lib/product_loan_count"
 require "pry"
 
 class ProductSpec < MiniTest::Spec
   before do
+    @customer = CustomerHelper.customer
+    @customer2 = CustomerHelper.customer2
     @product = ProductHelper.product
     @product2 = ProductHelper.product2
   end
@@ -123,7 +126,6 @@ class ProductSpec < MiniTest::Spec
       it "should deduct 1 from stock_level whenever an item is loaned" do
 	original_stock = @product.stock_level
 	@product.loaned_to(@customer)
-	@product.stock_level.wont_equal original_stock
         @product.stock_level.must_equal original_stock - 1
       end
 
@@ -145,7 +147,6 @@ class ProductSpec < MiniTest::Spec
       end
       
       it "should increment by 1 from stock_level whenever an item is returned" do
-	binding.pry
 	original_stock = @product3.stock_level
 	@product3.returned_by(@customer)
 	@product3.stock_level.wont_equal original_stock

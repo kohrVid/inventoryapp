@@ -66,9 +66,8 @@ class CustomerSpec < MiniTest::Spec
       it "should be able to find customers by last name" do
 	Customer.add(@customer)
 	Customer.add(@customer2)
-	binding.pry
 	Customer.find_by_last_name("Ta").first.id.must_equal @customer2.id
       end
-    end
+    end 
   end
 end
