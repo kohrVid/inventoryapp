@@ -39,12 +39,12 @@ module Repository
       all.select {|item| item.id == id }.first
     end
 
-    def load
-      all = YAML.load_file("./entries.yml")
+    def load(file_name)
+      all = YAML.load_file(file_name)
     end
 
-    def save
-      file = File.open("./entries.yml", "w")
+    def save(file_name)
+      file = File.open(file_name, "w")
 =begin
       if load.select { |item|
 	item.instance_variables.map{|i| item.instand_variable_get(i)}

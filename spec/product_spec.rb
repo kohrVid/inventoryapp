@@ -69,8 +69,8 @@ class ProductSpec < MiniTest::Spec
 	original_count = Product.count
 	Product.add(@product)
 	Product.add(@product2)
-	Product.save
-	Product.load
+	Product.save("./entries.yml")
+	Product.load("./entries.yml")
 	Product.count.must_equal original_count + 2
 	File.exist?("./entries.yml").must_equal true
       end

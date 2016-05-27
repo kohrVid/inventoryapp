@@ -26,5 +26,25 @@ class ToySpec < MiniTest::Spec
     it "should have an age-range" do
       @toy.age_range.wont_be_nil
     end
+    
+    describe "CRUD methods" do
+      it "should save and load cds" do
+	File.delete("./toy.yml") if File.exist?("./toy.yml")
+	original_count = Toy.count
+	Toy.add(@toy)
+	Toy.add(@toy2)
+	Toy.save("./toy.yml")
+	Toy.load("./toy.yml")
+	Toy.count.must_equal original_count + 2
+	File.exist?("./toy.yml").must_equal true
+      end
+
+      it "should be able to delete a toy" do
+	Toy.add(@toy)
+	Toy.add(@toy2)
+	Toy.delete(@toy.id)
+	Toy.all.wont_include(@toy)
+      end
+    end
   end
 end

@@ -21,14 +21,14 @@ class CdSpec < MiniTest::Spec
 
     describe "CRUD methods" do
       it "should save and load cds" do
-	File.delete("./entries.yml") if File.exist?("./entries.yml")
+	File.delete("./cd.yml") if File.exist?("./cd.yml")
 	original_count = Cd.count
 	Cd.add(@cd)
 	Cd.add(@cd2)
-	Cd.save
-	Cd.load
+	Cd.save("./cd.yml")
+	Cd.load("./cd.yml")
 	Cd.count.must_equal original_count + 2
-	File.exist?("./entries.yml").must_equal true
+	File.exist?("./cd.yml").must_equal true
       end
 
       it "should be able to delete a cd" do
