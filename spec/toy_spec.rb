@@ -28,13 +28,20 @@ class ToySpec < MiniTest::Spec
     end
     
     describe "CRUD methods" do
-      it "should save and load cds" do
+      it "should load cds" do
+	original_count = Toy.count
+	Toy.add(@toy)
+	Toy.add(@toy2)
+	Toy.load("./toy.yml")
+	Toy.count.must_equal original_count + 2
+      end
+
+      it "should save cds" do
 	File.delete("./toy.yml") if File.exist?("./toy.yml")
 	original_count = Toy.count
 	Toy.add(@toy)
 	Toy.add(@toy2)
 	Toy.save("./toy.yml")
-	Toy.load("./toy.yml")
 	Toy.count.must_equal original_count + 2
 	File.exist?("./toy.yml").must_equal true
       end

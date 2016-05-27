@@ -70,17 +70,23 @@ class ProductSpec < MiniTest::Spec
       it "should be able to search product titles alphabetically" do
 	Product.add(@product)
 	Product.add(@product2)
-	binding.pry
 	Product.find_by_letter("J").first.title.must_equal "Juju"
       end
 
-      it "should save and load products" do
+      it "should load products" do
+	original_count = Product.count
+	Product.add(@product)
+	Product.add(@product2)
+	Product.load("./entries.yml")
+	Product.count.must_equal original_count + 2
+      end
+      
+      it "should save products" do
 	File.delete("./entries.yml") if File.exist?("./entries.yml")
 	original_count = Product.count
 	Product.add(@product)
 	Product.add(@product2)
 	Product.save("./entries.yml")
-	Product.load("./entries.yml")
 	Product.count.must_equal original_count + 2
 	File.exist?("./entries.yml").must_equal true
       end

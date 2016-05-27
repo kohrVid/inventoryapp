@@ -20,8 +20,8 @@ class ProductLoanCountSpec < MiniTest::Spec
       @product2.loaned_to(@customer)
       product_loan_counts = ProductLoanCount.all
       product_loan_counts.count.must_equal Product.all.count
-      product_loan_counts.select {|plc| plc.product == @product2  }.first.count.must_equal 1
-      product_loan_counts.reject {|plc| plc.product == @product2  }.inject(0){|sum, plc| sum += plc.count }.must_equal 0
+      product_loan_counts.select { |plc| plc.product == @product2 }.first.count.must_equal 1
+      product_loan_counts.reject { |plc| plc.product == @product2 }.inject(0){|sum, plc| sum += plc.count }.must_equal 0
     end
   end
 end

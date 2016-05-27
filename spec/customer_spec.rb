@@ -34,13 +34,20 @@ class CustomerSpec < MiniTest::Spec
     end
     
     describe "CRUD methods" do
-      it "should save and load customers" do
+      it "should load customers" do
+	original_count = Customer.count
+	Customer.add(@customer)
+	Customer.add(@customer2)
+	Customer.load("./customers.yml")
+	Customer.count.must_equal original_count + 2
+      end
+      
+      it "should save customers" do
 	File.delete("./customers.yml") if File.exist?("./customers.yml")
 	original_count = Customer.count
 	Customer.add(@customer)
 	Customer.add(@customer2)
 	Customer.save("./customers.yml")
-	Customer.load("./customers.yml")
 	Customer.count.must_equal original_count + 2
 	File.exist?("./customers.yml").must_equal true
       end

@@ -32,13 +32,20 @@ class BookSpec < MiniTest::Spec
     end
     
     describe "CRUD methods" do
-      it "should save and load cds" do
+      it "should load books" do
+	original_count = Book.count
+	Book.add(@book)
+	Book.add(@book2)
+	Book.load("./book.yml")
+	Book.count.must_equal original_count + 2
+      end
+
+      it "should save books" do
 	File.delete("./book.yml") if File.exist?("./book.yml")
 	original_count = Book.count
 	Book.add(@book)
 	Book.add(@book2)
 	Book.save("./book.yml")
-	Book.load("./book.yml")
 	Book.count.must_equal original_count + 2
 	File.exist?("./book.yml").must_equal true
       end

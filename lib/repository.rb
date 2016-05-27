@@ -40,7 +40,9 @@ module Repository
     end
 
     def load(file_name)
+      delete_all
       all = YAML.load_file(file_name)
+      all.each{|item| add(item)}
     end
 
     def save(file_name)
