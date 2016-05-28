@@ -24,18 +24,18 @@ class CdSpec < MiniTest::Spec
 	original_count = Cd.count
 	Cd.add(@cd)
 	Cd.add(@cd2)
-	Cd.load("./cd.yml")
+	Cd.load("./cds.yml")
 	Cd.count.must_equal original_count + 2
       end
 
       it "should save and load cds" do
-	File.delete("./cd.yml") if File.exist?("./cd.yml")
+	File.delete("./cds.yml") if File.exist?("./cds.yml")
 	original_count = Cd.count
 	Cd.add(@cd)
 	Cd.add(@cd2)
-	Cd.save("./cd.yml")
+	Cd.save("./cds.yml")
 	Cd.count.must_equal original_count + 2
-	File.exist?("./cd.yml").must_equal true
+	File.exist?("./cds.yml").must_equal true
       end
 
       it "should be able to find CDs by title" do

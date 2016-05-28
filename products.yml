@@ -1,0 +1,16 @@
+---
+- !ruby/object:Product
+  id: 100040
+  title: Some Girls Wander By Mistake
+  description: Compilation album
+  stock_level: 43
+- !ruby/object:Product
+  id: 100041
+  title: Some Girls Wander By Mistake
+  description: Compilation album
+  stock_level: 43
+- !ruby/object:Product
+  id: 100042
+  title: Juju
+  description: An 80s album
+  stock_level: 13

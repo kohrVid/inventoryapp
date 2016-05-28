@@ -77,18 +77,18 @@ class ProductSpec < MiniTest::Spec
 	original_count = Product.count
 	Product.add(@product)
 	Product.add(@product2)
-	Product.load("./entries.yml")
+	Product.load("./products.yml")
 	Product.count.must_equal original_count + 2
       end
       
       it "should save products" do
-	File.delete("./entries.yml") if File.exist?("./entries.yml")
+	File.delete("./products.yml") if File.exist?("./products.yml")
 	original_count = Product.count
 	Product.add(@product)
 	Product.add(@product2)
-	Product.save("./entries.yml")
+	Product.save("./products.yml")
 	Product.count.must_equal original_count + 2
-	File.exist?("./entries.yml").must_equal true
+	File.exist?("./products.yml").must_equal true
       end
 
       it "should be possible to update a product" do

@@ -1,0 +1,13 @@
+---
+- !ruby/object:Toy
+  id: 100013
+  title: Azul
+  description: Blue teddy bear from the Iberian Peninsula
+  age_range: 3-10 years
+  stock_level: 15
+- !ruby/object:Toy
+  id: 100014
+  title: Lucretzia My Purrfection
+  description: Stuffed Persian cat
+  age_range: 3-10 years
+  stock_level: 11

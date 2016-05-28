@@ -4,8 +4,9 @@ require "./lib/toy"
 
 class ToySpec < MiniTest::Spec
   before do
-    @toy = Toy.new({title: "Azul", description: "Blue teddy bear from the Iberian Peninsula", age_range: "3-10 years"})
-    @toy2 = Toy.new({title: "Lucretzia My Purrfection", description: "Stuffed Persian cat", age_range: "3-10 years"})
+    @toy = Toy.new({title: "Azul", description: "Blue teddy bear from the Iberian Peninsula", age_range: "3-10 years", stock_level: 15})
+    @toy2 = Toy.new({title: "Lucretzia My Purrfection", description: "Stuffed Persian cat", age_range: "3-10 years", stock_level: 11})
+    Toy.delete_all
   end
 
   describe Toy do
@@ -32,18 +33,18 @@ class ToySpec < MiniTest::Spec
 	original_count = Toy.count
 	Toy.add(@toy)
 	Toy.add(@toy2)
-	Toy.load("./toy.yml")
+	Toy.load("./toys.yml")
 	Toy.count.must_equal original_count + 2
       end
 
       it "should save cds" do
-	File.delete("./toy.yml") if File.exist?("./toy.yml")
+	File.delete("./toys.yml") if File.exist?("./toys.yml")
 	original_count = Toy.count
 	Toy.add(@toy)
 	Toy.add(@toy2)
-	Toy.save("./toy.yml")
+	Toy.save("./toys.yml")
 	Toy.count.must_equal original_count + 2
-	File.exist?("./toy.yml").must_equal true
+	File.exist?("./toys.yml").must_equal true
       end
 
       it "should be able to delete a toy" do

@@ -1,0 +1,15 @@
+---
+- !ruby/object:Book
+  id: 100003
+  title: 'Debt: The First 5000 Years'
+  author: David Graeber
+  description: Book about the origins of money and debt
+  genre: Anthropology
+  stock_level: 12
+- !ruby/object:Book
+  id: 100004
+  title: The Second Sex
+  author: Simone de Beauvoir
+  description: A book about women
+  genre: Anthropology/Philosophy
+  stock_level: 37

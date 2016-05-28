@@ -4,8 +4,9 @@ require "./lib/book"
 
 class BookSpec < MiniTest::Spec
   before do
-    @book = Book.new({title: "Debt: The First 5000 Years", author: "David Graeber", description: "Book about the origins of money and debt", genre: "Anthropology"})
-    @book2 = Book.new({title: "The Second Sex", author: "Simone de Beauvoir", description: "A book about women", genre: "Anthropology/Philosophy"})
+    @book = Book.new({title: "Debt: The First 5000 Years", author: "David Graeber", description: "Book about the origins of money and debt", genre: "Anthropology", stock_level: 12})
+    @book2 = Book.new({title: "The Second Sex", author: "Simone de Beauvoir", description: "A book about women", genre: "Anthropology/Philosophy", stock_level: 37})
+    Book.delete_all
   end
 
   describe Book do
@@ -36,18 +37,18 @@ class BookSpec < MiniTest::Spec
 	original_count = Book.count
 	Book.add(@book)
 	Book.add(@book2)
-	Book.load("./book.yml")
+	Book.load("./books.yml")
 	Book.count.must_equal original_count + 2
       end
 
       it "should save books" do
-	File.delete("./book.yml") if File.exist?("./book.yml")
+	File.delete("./books.yml") if File.exist?("./books.yml")
 	original_count = Book.count
 	Book.add(@book)
 	Book.add(@book2)
-	Book.save("./book.yml")
+	Book.save("./books.yml")
 	Book.count.must_equal original_count + 2
-	File.exist?("./book.yml").must_equal true
+	File.exist?("./books.yml").must_equal true
       end
 
       it "should be able to delete a book" do
