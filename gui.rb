@@ -2,6 +2,7 @@ require "./lib/product"
 require "./lib/book"
 require "./lib/cd"
 require "./lib/customer"
+require "./lib/product_loan_count"
 require "./lib/toy"
 
 Product.load("./products.yml")
@@ -20,8 +21,8 @@ Shoes.app(title: "Inventory", width: 1200) do
 	para strong "What type of product would you like to search for today?", stroke: "#f7f7f7"
       end
 
-      flow do
-	button "All Products", background: "#f00" do
+      flow margin: 10 do
+	button "All Products" do
 	  product
 	end
 	button "Books" do
@@ -32,6 +33,14 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
 	button "Toys" do
 	  toy
+	end
+      end
+      flow margin: 10 do
+	button "All Customers" do
+	  customer
+	end
+	button "All Outstanding Loans" do
+	  outstanding_loans
 	end
       end
     end
@@ -75,6 +84,19 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
       end
     end
+    def customer
+      @window.clear do
+	search(Customer, "./customers.yml")
+	para link(strong "Add new Customer", stroke: "#f7f7f7").click do
+	  @window.clear do
+	  #TODO  new(Customer, "./customers.yml")
+	  end
+	end
+	@output = flow do
+	  output_grid(Customer.all, "./customers.yml")
+	end
+      end
+    end
     def toy
       @window.clear do
 	search(Toy, "./toys.yml")
@@ -85,6 +107,46 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
 	@output = flow do
 	  output_grid(Toy.all, "./toys.yml")
+	end
+      end
+    end
+    def outstanding_loans
+      @window.clear do
+	columns = ProductLoanCount.all.first.product.instance_variables
+	column_width = "#{100/(columns.size + 1)}%"
+	title_width = "#{100/(columns.size - 1)}%"
+	title "Outstanding Loans"
+	para link(strong "Go back home", stroke: "#f7f7f7").click do
+	  @window.clear do
+	    home
+	  end
+	end
+	flow do
+	  ["", "id", "title", "count"].each do |heading|
+	    stack width: "#{heading == "title" ? title_width : column_width}", margin: 1 do
+	      para strong heading, stroke: "#f7f7f7"
+	    end
+	  end
+	  ProductLoanCount.all.each do |row|
+	    flow do
+	      stack width: column_width do
+		para strong "#{row.product.class}", stroke: "#f7f7f7"
+	      end
+	      stack width: column_width do
+		para strong "#{row.product.id}", stroke: "#f7f7f7"
+	      end
+	      stack width: title_width do
+		para link(strong "#{row.product.title}", stroke: "#f7f7f7").click do
+		  @window.clear do
+		    show(row.product, file_name)
+		  end
+		end
+	      end
+	      stack width: column_width do
+		para strong "#{row.count}", stroke: "#f7f7f7"
+	      end
+	    end
+	  end
 	end
       end
     end

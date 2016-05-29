@@ -1,6 +1,6 @@
 require "./lib/product"
 require "./lib/customer"
-require "pry"
+
 class ProductLoanCount
   attr_reader :product, :count
 
