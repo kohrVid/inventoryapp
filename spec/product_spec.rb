@@ -122,15 +122,20 @@ class ProductSpec < MiniTest::Spec
         @product.stock_level.must_equal original_stock - 1
       end
 
+      it "should alert the retailer if the transaction was successful" do
+	Product.add(@product)
+	proc{ puts @product.sold(1) }.must_output "Item has been sold\n"
+      end
+
       it "should alert the retailer if the stock level falls below 10" do
 	Product.add(@product2)
-	proc{ @product2.sold(4) }.must_output "Running low on stock - ordered more stock\n"
+	proc{ puts @product2.sold(4) }.must_output "Item has been sold\nRunning low on stock - ordered more stock\n"
 	@product2.stock_level.must_equal 29
       end
 
       it "should not allow items with stock levels of 0 to be sold" do
 	Product.add(@product2)
-	proc { @product2.sold(14) }.must_output "Item is out of stock\n"
+	proc { puts @product2.sold(14) }.must_output "Item is out of stock - your order has been cancelled.\n"
 	@product2.stock_level.must_equal 13
       end
     end
@@ -148,13 +153,24 @@ class ProductSpec < MiniTest::Spec
 	@product.loaned_to(@customer)
         @product.stock_level.must_equal original_stock - 1
       end
+      
+      it "should alert the retailer if the loan was successful" do
+	proc{ puts @product.loaned_to(@customer) }.must_output "\"Some Girls Wander By Mistake\" has been successfully loaned to Amelia Tan\n"
+      end
 
       it "should not allow customers to borrow the same item twice" do
 	original_stock = @product.stock_level
 	@product.loaned_to(@customer)
-	proc { @product.loaned_to(@customer) }.must_output "You have already borrowed this item\n"
+	proc { puts @product.loaned_to(@customer) }.must_output "You have already borrowed this item\n"
 	@product.stock_level.wont_equal original_stock - 2
         @product.stock_level.must_equal original_stock - 1
+      end
+      
+      it "should not allow customers to borrow more than one item at a time" do
+	original_stock = @product2.stock_level
+	@product.loaned_to(@customer)
+	proc { puts @product2.loaned_to(@customer) }.must_output "You have already borrowed an item. Please return your loaned item before borrowing another.\n"
+	@product2.stock_level.wont_equal original_stock - 1
       end
     end
     
@@ -172,11 +188,14 @@ class ProductSpec < MiniTest::Spec
 	@product3.stock_level.wont_equal original_stock
         @product3.stock_level.must_equal original_stock + 1
       end
+      it "should increment by 1 from stock_level whenever an item is returned" do
+	proc{ puts @product3.returned_by(@customer) }.must_output "\"Some Girls Wander By Mistake\" was successfully returned.\n"
+      end
 
-      it "should not allow customers to return the same item twice" do
+      it "should alert the customer when an item is returned successfully" do
 	original_stock = @product3.stock_level
 	@product3.returned_by(@customer)
-	proc { @product3.returned_by(@customer) }.must_output "You have not borrowed any new items\n"
+	proc { puts @product3.returned_by(@customer) }.must_output "You have not borrowed any new items\n"
 	@product3.stock_level.wont_equal original_stock + 2
         @product3.stock_level.must_equal original_stock + 1
       end

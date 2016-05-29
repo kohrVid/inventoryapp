@@ -56,7 +56,7 @@ class CustomerSpec < MiniTest::Spec
 	Customer.count.must_equal original_count + 2
 	File.exist?("./customers.yml").must_equal true
       end
-
+      
       it "should be possible to update a customer" do
 	Customer.add(@customer)
 	@customer.edit({first_name: "Andrew", last_name: "Eldritch"})
@@ -88,5 +88,6 @@ class CustomerSpec < MiniTest::Spec
 	Customer.find_by_last_name("Ta").first.id.must_equal @customer2.id
       end
     end 
+binding.pry
   end
 end

@@ -1,7 +1,7 @@
 require "./lib/product"
-require "./lib/customer"
 require "./lib/book"
 require "./lib/cd"
+require "./lib/customer"
 require "./lib/toy"
 
 Product.load("./products.yml")
@@ -176,99 +176,141 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
       end
     end
+  end
 
-    def form(hash, item)
-      flow do
-	item.instance_variables.each do |key|
-	  key_sym = key.to_s.gsub("@", "").to_sym
-	  unless key == :@id
-	    flow do
-	      para strong key.to_s.gsub("@", ""), stroke: "#f7f7f7"
-	    end
-	    flow do
-	      hash[key_sym] = edit_line "#{item.instance_variable_get(key)}"
-	    end
-	  end
-	end
-      end
-    end
-    
-    def all_items(item)
-      para link(strong "All #{item.class}s", stroke: "#f7f7f7").click do
-	if item.class == Product
-	  product
-	elsif item.class == Book
-	  book
-	elsif item.class == Cd
-	  cd
-	elsif item.class == Toy
-	  toy
-	end
-      end
-    end
-
-    def new(klass, file_name)
-      title "New #{klass}", stroke: "#f7f7f7"
-      instance_vars  = klass.all.first.instance_variables.map{|i| i.to_s.gsub("@","").to_sym}.reject{|i| i == :id}
-      form(@inventory_create = {}, klass.new(instance_vars))
-	flow do
-	  button "Submit" do
-	    @inventory_create.map{|k,v| @inventory_create[k] = v.text}
-	    klass.add(klass.new(@inventory_create))
-	    klass.save(file_name)
-	    @window.clear do
-	      if klass == Product
-		product
-	      elsif klass == Book
-		book
-	      elsif klass == Cd
-		cd
-	      elsif klass == Toy
-		toy
-	      end
-	    end
-	  end
-	end
-	stack margin: 5 do
-	  all_items(klass.all.first)
-	end
-      end
-    end
-    
-    def edit(item, file_name)
-      title "Edit #{item.title}", stroke: "#f7f7f7"
-      form(@inventory_update = {}, item)
-	stack margin: 5 do
-	  button "Submit" do
-	    @inventory_update.map{|k,v| @inventory_update[k] = v.text}
-	    item.edit(@inventory_update)
-	    item.class.save(file_name)
-	    @window.clear do
-	      home
-	    end
-	  end
-	end
-	stack margin: 5 do
-	  all_items(item)
-	end
-      end
-    end
-    
-    def show(item, file_name)
-      flow do
-	title "#{item.title}", stroke: "#f7f7f7"
-	item.instance_variables.each do |key|
-	  key_sym = key.to_s.gsub("@", "").to_sym
+  def form(hash, item)
+    flow do
+      item.instance_variables.each do |key|
+	key_sym = key.to_s.gsub("@", "").to_sym
+	unless key == :@id
 	  flow do
 	    para strong key.to_s.gsub("@", ""), stroke: "#f7f7f7"
 	  end
 	  flow do
-	    para "#{item.instance_variable_get(key)}", stroke: "#f7f7f7"
+	    hash[key_sym] = edit_line "#{item.instance_variable_get(key)}"
 	  end
-	end
-	stack margin: 5 do
-	  all_items(item)
 	end
       end
     end
+  end
   
+  def all_items(item)
+    para link(strong "All #{item.class}s", stroke: "#f7f7f7").click do
+      if item.class == Product
+	product
+      elsif item.class == Book
+	book
+      elsif item.class == Cd
+	cd
+      elsif item.class == Toy
+	toy
+      end
+    end
+  end
+
+  def new(klass, file_name)
+    title "New #{klass}", stroke: "#f7f7f7"
+    instance_vars  = klass.all.first.instance_variables.map{|i| i.to_s.gsub("@","").to_sym}.reject{|i| i == :id}
+    form(@inventory_create = {}, klass.new(instance_vars))
+    flow do
+      button "Submit" do
+	@inventory_create.map{|k,v| @inventory_create[k] = v.text}
+	klass.add(klass.new(@inventory_create))
+	klass.save(file_name)
+	@window.clear do
+	  if klass == Product
+	    product
+	  elsif klass == Book
+	    book
+	  elsif klass == Cd
+	    cd
+	  elsif klass == Toy
+	    toy
+	  end
+	end
+      end
+    end
+    stack margin: 5 do
+      all_items(klass.all.first)
+    end
+  end
+  
+  def edit(item, file_name)
+    title "Edit #{item.title}", stroke: "#f7f7f7"
+    form(@inventory_update = {}, item)
+    stack margin: 5 do
+      button "Submit" do
+	@inventory_update.map{|k,v| @inventory_update[k] = v.text}
+	item.edit(@inventory_update)
+	item.class.save(file_name)
+	@window.clear do
+	  home
+	end
+      end
+    end
+    stack margin: 5 do
+      all_items(item)
+    end
+  end
+  
+  def show(item, file_name)
+    flow do
+      title "#{item.title}", stroke: "#f7f7f7"
+      item.instance_variables.each do |key|
+	key_sym = key.to_s.gsub("@", "").to_sym
+	flow do
+	  para strong key.to_s.gsub("@", ""), stroke: "#f7f7f7"
+	end
+	flow do
+	  para "#{item.instance_variable_get(key)}", stroke: "#f7f7f7"
+	end
+      end
+      stack margin: 5 do
+	all_items(item)
+      end
+    end
+  end
+  
+  def sell_loan(item, file_name)
+    title "Sell or Loan \"#{item.title}\"", stroke: "#f7f7f7"
+    subtitle "Sell", stroke: "#f7f7f7"
+    flow do
+      para "Quantity:", stroke: "#f7f7f7"
+      para
+      @quantity = edit_line width: 25
+      para
+      button "sell" do
+	alert(item.sold(@quantity.text.to_i))
+	item.class.save(file_name)
+	@window.clear do
+	  show(item, file_name)
+	end
+      end
+    end
+    subtitle "Loan", stroke: "#f7f7f7"
+    para "Select a customer", stroke: "#f7f7f7"
+    flow do
+      @customers = {}
+      Customer.all.each{|customer|
+	@customers[customer.full_name] = customer
+      }
+      list_box items: @customers.keys, width: 250, choose: @customers.keys.first do |name|
+	key = name.text
+	@customer = @customers[key.to_s]
+      end
+      para
+      button "loan" do
+       alert(item.loaned_to(@customer))
+	item.class.save(file_name)
+	Customer.save("./customers.yml")
+	@window.clear do
+	  show(item, file_name)
+	end
+      end
+    end
+    stack margin: 5 do
+      all_items(item)
+    end
+  end
+  
+end 
