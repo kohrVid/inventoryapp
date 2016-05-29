@@ -20,10 +20,15 @@ class CustomerSpec < MiniTest::Spec
     it "should have a last name" do
       @customer.last_name.wont_be_nil
     end
+
+    it "should have a full name" do
+      @customer.full_name.must_equal "Alexas Krauss"
+    end
     
     it "should have an email address" do
       @customer.email_address.wont_be_nil
     end
+
     it "should have a phone number" do
       @customer.phone_number.wont_be_nil
     end

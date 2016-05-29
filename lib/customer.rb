@@ -17,6 +17,10 @@ class Customer
     end
   end
 
+  def full_name
+    "#{self.first_name} #{self.last_name}"
+  end
+
   def self.find_by_first_name(search_term)
     Customer.all.select {|customer| customer.class == Customer && customer.first_name.include?(search_term) }
   end
