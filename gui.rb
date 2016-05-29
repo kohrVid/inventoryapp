@@ -35,6 +35,7 @@ Shoes.app(title: "Inventory", width: 1200) do
 	  toy
 	end
       end
+    
       flow margin: 10 do
 	button "All Customers" do
 	  customer
@@ -44,69 +45,73 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
       end
     end
+
+
+
+    ##Controllers##
     
     def product
       @window.clear do
-	search(Product, "./products.yml")
+	search(Product)
 	para link(strong "Add new product", stroke: "#f7f7f7").click do
 	  @window.clear do
-	    new(Product, "./products.yml")
+	    new(Product)
 	  end
 	end
 	@output = flow do
-	  output_grid(Product.all, "./products.yml")
+	  output_grid(Product.all)
 	end
       end
     end
     def book
       @window.clear do
-	search(Book, "./books.yml")
+	search(Book)
 	para link(strong "Add new book", stroke: "#f7f7f7").click do
 	  @window.clear do
-	    new(Book, "./books.yml")
+	    new(Book)
 	  end
 	end
 	@output = flow do
-	  output_grid(Book.all, "./books.yml")
+	  output_grid(Book.all)
 	end
       end
     end
     def cd
       @window.clear do
-	search(Cd, "./cds.yml")
+	search(Cd)
 	para link(strong "Add new CD", stroke: "#f7f7f7").click do
 	  @window.clear do
-	    new(Cd, "./cds.yml")
+	    new(Cd)
 	  end
 	end
 	@output = flow do
-	  output_grid(Cd.all, "./cds.yml")
+	  output_grid(Cd.all)
 	end
       end
     end
     def customer
       @window.clear do
-	search(Customer, "./customers.yml")
+	search(Customer)
 	para link(strong "Add new Customer", stroke: "#f7f7f7").click do
 	  @window.clear do
-	  #TODO  new(Customer, "./customers.yml")
+	  #TODO  new(Customer)
 	  end
 	end
 	@output = flow do
-	  output_grid(Customer.all, "./customers.yml")
+	  output_grid(Customer.all)
 	end
       end
     end
     def toy
       @window.clear do
-	search(Toy, "./toys.yml")
+	search(Toy)
 	para link(strong "Add new toy", stroke: "#f7f7f7").click do
 	  @window.clear do
-	    new(Toy, "./toys.yml")
+	    new(Toy)
 	  end
 	end
 	@output = flow do
-	  output_grid(Toy.all, "./toys.yml")
+	  output_grid(Toy.all)
 	end
       end
     end
@@ -138,7 +143,7 @@ Shoes.app(title: "Inventory", width: 1200) do
 	      stack width: title_width do
 		para link(strong "#{row.product.title}", stroke: "#f7f7f7").click do
 		  @window.clear do
-		    show(row.product, file_name)
+		    show(row.product)
 		  end
 		end
 	      end
@@ -153,7 +158,11 @@ Shoes.app(title: "Inventory", width: 1200) do
     
     home
 
-    def search(klass, file_name)
+
+
+    ##Partials##
+
+    def search(klass)
       flow do
 	title "#{klass == Cd ? "CD" : klass}s", stroke: "#f7f7f7"
 	flow do
@@ -164,13 +173,13 @@ Shoes.app(title: "Inventory", width: 1200) do
 	  [*"A".."Z"].map do |b|
 	    button b do
 	      @output.clear do
-		output_grid(klass.find_by_letter(b), file_name)
+		output_grid(klass.find_by_letter(b))
 	      end
 	    end
 	  end
 	  button "All #{klass}s" do
 	    @output.clear do
-	      output_grid(klass.all, file_name)
+	      output_grid(klass.all)
 	    end
 	  end
 	  button "Go home" do
@@ -183,7 +192,7 @@ Shoes.app(title: "Inventory", width: 1200) do
     end
 
 
-    def output_grid(objects, file_name)
+    def output_grid(objects)
       if objects == []
 	para strong "Nothing to see here", stroke: "#f7f7f7"
       else
@@ -198,7 +207,7 @@ Shoes.app(title: "Inventory", width: 1200) do
 		if key == :@title
 		  para link(strong "#{item.instance_variable_get(key)}", stroke: "#f7f7f7").click do
 		    @window.clear do
-		      show(item, file_name)
+		      show(item)
 		    end
 		  end
 		else
@@ -215,12 +224,12 @@ Shoes.app(title: "Inventory", width: 1200) do
 	    flow width: "300%" do
 	      inscription link(strong "Sell/Loan", stroke: "#f7f7f7").click do
 		@window.clear do
-		  sell_loan(item, file_name)
+		  sell_loan(item)
 		end
 	      end
 	      inscription link(strong "Edit", stroke: "#f7f7f7").click do
 		@window.clear do
-		  edit(item, file_name)
+		  edit(item)
 		end
 	      end
 	      inscription link(strong "Delete", stroke: "#f7f7f7").click do
@@ -240,6 +249,7 @@ Shoes.app(title: "Inventory", width: 1200) do
     end
   end
 
+
   def form(hash, item)
     flow do
       item.instance_variables.each do |key|
@@ -255,6 +265,9 @@ Shoes.app(title: "Inventory", width: 1200) do
       end
     end
   end
+
+
+  ##Helpers##
   
   def all_items(item)
     para link(strong "All #{item.class}s", stroke: "#f7f7f7").click do
@@ -270,11 +283,29 @@ Shoes.app(title: "Inventory", width: 1200) do
     end
   end
 
-  def new(klass, file_name)
+  def file_names(klass)
+    if klass == Product
+      "./products.yml"
+    elsif klass == Book
+      "./books.yml"
+    elsif klass == Cd
+      "./cds.yml"
+    elsif klass == Toy
+      "./toys.yml"
+    elsif klass == Customer
+      "./customers.yml"
+    end
+  end
+
+
+  ##Actions##
+  
+  def new(klass)
+    file_name = file_names(klass)
     title "New #{klass}", stroke: "#f7f7f7"
-    instance_vars  = klass.all.first.instance_variables.map{|i| i.to_s.gsub("@","").to_sym}.reject{|i| i == :id}
+    instance_vars = klass.all.first.instance_variables.map{|i| i.to_s.gsub("@","").to_sym}.reject{|i| i == :id}
     form(@inventory_create = {}, klass.new(instance_vars))
-    flow do
+    flow margin: 5 do
       button "Submit" do
 	@inventory_create.map{|k,v| @inventory_create[k] = v.text}
 	klass.add(klass.new(@inventory_create))
@@ -297,7 +328,8 @@ Shoes.app(title: "Inventory", width: 1200) do
     end
   end
   
-  def edit(item, file_name)
+  def edit(item)
+    file_name = file_names(item.class)
     title "Edit #{item.title}", stroke: "#f7f7f7"
     form(@inventory_update = {}, item)
     stack margin: 5 do
@@ -315,7 +347,8 @@ Shoes.app(title: "Inventory", width: 1200) do
     end
   end
   
-  def show(item, file_name)
+  def show(item)
+    file_name = file_names(item.class)
     flow do
       title "#{item.title}", stroke: "#f7f7f7"
       item.instance_variables.each do |key|
@@ -333,7 +366,8 @@ Shoes.app(title: "Inventory", width: 1200) do
     end
   end
   
-  def sell_loan(item, file_name)
+  def sell_loan(item)
+    file_name = file_names(item.class)
     title "Sell or Loan \"#{item.title}\"", stroke: "#f7f7f7"
     subtitle "Sell", stroke: "#f7f7f7"
     flow do
@@ -345,7 +379,7 @@ Shoes.app(title: "Inventory", width: 1200) do
 	alert(item.sold(@quantity.text.to_i))
 	item.class.save(file_name)
 	@window.clear do
-	  show(item, file_name)
+	  show(item)
 	end
       end
     end
@@ -366,7 +400,7 @@ Shoes.app(title: "Inventory", width: 1200) do
 	item.class.save(file_name)
 	Customer.save("./customers.yml")
 	@window.clear do
-	  show(item, file_name)
+	  show(item)
 	end
       end
     end
