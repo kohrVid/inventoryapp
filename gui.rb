@@ -98,7 +98,6 @@ Shoes.app(title: "Inventory", width: 1200) do
 	search(Customer)
 	para link(strong "Add new Customer", stroke: $font_colour).click do
 	  @window.clear do
-	  #TODO  
 	    new(Customer)
 	  end
 	end
@@ -308,15 +307,14 @@ Shoes.app(title: "Inventory", width: 1200) do
   end
 
   def file_names(klass)
-    file_names_hash = { 
+    { 
       Product => "./products.yml",
       Book => "./books.yml", 
       Cd => "./cds.yml", 
       Toy => "./toys.yml", 
       Customer => "./customers.yml"
-    }
-    file_names_hash.each do |k,v|
-      v if klass == k
+    }.each do |k,v|
+      return v if klass == k
     end
   end
 
@@ -334,7 +332,7 @@ Shoes.app(title: "Inventory", width: 1200) do
 	klass.save(file_name)
 	@window.clear do
 	  klass_hash.each do |k, v|
-	    v if klass == k 
+	    v.call if klass == k 
 	  end
 	end
       end

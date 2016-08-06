@@ -47,17 +47,8 @@ module Repository
 
     def save(file_name)
       file = File.open(file_name, "w")
-=begin
-      if load.select { |item|
-	item.instance_variables.map{|i| item.instand_variable_get(i)}
-      } == []
-	raise "#{self} already exists"
-	file.close
-      else
-=end
-	file.write(all.to_yaml)
-	file.close
-    #  end
+      file.write(all.to_yaml)
+      file.close
     end
 
     def delete(id)
