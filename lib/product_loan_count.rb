@@ -9,6 +9,10 @@ class ProductLoanCount
     @count = count
   end
 
+  def self.instance_vars
+    [:product, :count] 
+  end
+
   def self.all
     result = []
     Product.all.each do |product|

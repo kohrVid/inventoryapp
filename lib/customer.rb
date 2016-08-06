@@ -11,6 +11,10 @@ class Customer
     end
   end
 
+  def self.instance_vars
+    [:first_name, :last_name, :email_address, :phone_number, :product_loaned] 
+  end
+
   def edit(params ={})
     params.each do |k, v|
       self.instance_variable_set "@#{k.to_s}", v

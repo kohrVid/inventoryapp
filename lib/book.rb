@@ -8,4 +8,9 @@ class Book < Product
       self.instance_variable_set "@#{k.to_s}", v
     end
   end
+  
+  def self.instance_vars
+    super + [:author, :genre]
+  end
+
 end

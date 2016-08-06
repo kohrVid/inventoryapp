@@ -9,4 +9,8 @@ class Toy < Product
     end
   end
 
+  def self.instance_vars
+    super + [:age_range] 
+  end
+
 end

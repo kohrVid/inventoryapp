@@ -1,6 +1,6 @@
 ---
 - !ruby/object:Customer
-  id: 15
+  id: 23
   first_name: Alexas
   last_name: Krauss
   email_address: alexas@bitterrivals.us
@@ -11,7 +11,7 @@
     description: Compilation album
     stock_level: 43
 - !ruby/object:Customer
-  id: 16
+  id: 24
   first_name: Amelia
   last_name: Tan
   email_address: amelia.arsenic@angelspit.net

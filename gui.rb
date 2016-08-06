@@ -10,15 +10,16 @@ Book.load("./books.yml")
 Cd.load("./cds.yml")
 Customer.load("./customers.yml")
 Toy.load("./toys.yml")
+$font_colour = "#f7f7f7"
 
 
 Shoes.app(title: "Inventory", width: 1200) do
   background "#000".."#1eff9e" 
   @window = stack do 
     def home
-      banner "Inventory", stroke: "#f7f7f7"
+      banner "Inventory", stroke: $font_colour
       flow do
-	para strong "What type of product would you like to search for today?", stroke: "#f7f7f7"
+	para strong "What type of product would you like to search for today?", stroke: $font_colour
       end
 
       flow margin: 10 do
@@ -53,7 +54,7 @@ Shoes.app(title: "Inventory", width: 1200) do
     def product
       @window.clear do
 	search(Product)
-	para link(strong "Add new product", stroke: "#f7f7f7").click do
+	para link(strong "Add new product", stroke: $font_colour).click do
 	  @window.clear do
 	    new(Product)
 	  end
@@ -63,10 +64,11 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
       end
     end
+    
     def book
       @window.clear do
 	search(Book)
-	para link(strong "Add new book", stroke: "#f7f7f7").click do
+	para link(strong "Add new book", stroke: $font_colour).click do
 	  @window.clear do
 	    new(Book)
 	  end
@@ -76,10 +78,11 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
       end
     end
+    
     def cd
       @window.clear do
 	search(Cd)
-	para link(strong "Add new CD", stroke: "#f7f7f7").click do
+	para link(strong "Add new CD", stroke: $font_colour).click do
 	  @window.clear do
 	    new(Cd)
 	  end
@@ -89,12 +92,14 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
       end
     end
+    
     def customer
       @window.clear do
 	search(Customer)
-	para link(strong "Add new Customer", stroke: "#f7f7f7").click do
+	para link(strong "Add new Customer", stroke: $font_colour).click do
 	  @window.clear do
-	  #TODO  new(Customer)
+	  #TODO  
+	    new(Customer)
 	  end
 	end
 	@output = flow do
@@ -102,10 +107,11 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
       end
     end
+    
     def toy
       @window.clear do
 	search(Toy)
-	para link(strong "Add new toy", stroke: "#f7f7f7").click do
+	para link(strong "Add new toy", stroke: $font_colour).click do
 	  @window.clear do
 	    new(Toy)
 	  end
@@ -115,13 +121,15 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
       end
     end
+
     def outstanding_loans
       @window.clear do
-	columns = ProductLoanCount.all.first.product.instance_variables
+	#columns = ProductLoanCount.all.first.product.instance_variables
+	columns = Product.instance_vars
 	column_width = "#{100/(columns.size + 1)}%"
 	title_width = "#{100/(columns.size - 1)}%"
-	title "Outstanding Loans"
-	para link(strong "Go back home", stroke: "#f7f7f7").click do
+	title "Outstanding Loans", stroke: $font_colour
+	para link(strong "Go back home", stroke: $font_colour).click do
 	  @window.clear do
 	    home
 	  end
@@ -129,26 +137,26 @@ Shoes.app(title: "Inventory", width: 1200) do
 	flow do
 	  ["", "id", "title", "count"].each do |heading|
 	    stack width: "#{heading == "title" ? title_width : column_width}", margin: 1 do
-	      para strong heading, stroke: "#f7f7f7"
+	      para strong heading, stroke: $font_colour
 	    end
 	  end
 	  ProductLoanCount.all.each do |row|
 	    flow do
 	      stack width: column_width do
-		para strong "#{row.product.class}", stroke: "#f7f7f7"
+		para strong "#{row.product.class}", stroke: $font_colour
 	      end
 	      stack width: column_width do
-		para strong "#{row.product.id}", stroke: "#f7f7f7"
+		para strong "#{row.product.id}", stroke: $font_colour
 	      end
 	      stack width: title_width do
-		para link(strong "#{row.product.title}", stroke: "#f7f7f7").click do
+		para link(strong "#{row.product.title}", stroke: $font_colour).click do
 		  @window.clear do
 		    show(row.product)
 		  end
 		end
 	      end
 	      stack width: column_width do
-		para strong "#{row.count}", stroke: "#f7f7f7"
+		para strong "#{row.count}", stroke: $font_colour
 	      end
 	    end
 	  end
@@ -164,9 +172,9 @@ Shoes.app(title: "Inventory", width: 1200) do
 
     def search(klass)
       flow do
-	title "#{klass == Cd ? "CD" : klass}s", stroke: "#f7f7f7"
+	title "#{klass == Cd ? "CD" : klass}s", stroke: $font_colour
 	flow do
-	  para strong "Search alphabetically, using a search term or the advanced search tool", stroke: "#f7f7f7"
+	  para strong "Search alphabetically, using a search term or the advanced search tool", stroke: $font_colour
 	end
 	flow width: "90%", margin: 5 do
 	  @search_input = edit_line width: 100
@@ -194,24 +202,33 @@ Shoes.app(title: "Inventory", width: 1200) do
 
     def output_grid(objects)
       if objects == []
-	para strong "Nothing to see here", stroke: "#f7f7f7"
+	para strong "Nothing to see here", stroke: $font_colour
       else
 	columns = objects.first.instance_variables
 	column_width = "#{100/(columns.size + 6)}%"
 	title_width = "#{100/(columns.size - 1)}%"
 	columns.each do |key|
-	  stack width: "#{(key == :@description)|| (key == :@title) ? title_width : column_width}", margin: 1 do
-	    para strong key.to_s.gsub("@", ""), stroke: "#f7f7f7"
+	  stack width: "#{(key == :@description)|| (key == :@title) || (key == :@email_address) || (key == :@product_loaned) || (key == :@phone_number) ? title_width : column_width}", margin: 1 do
+	    para strong column_name(key), stroke: $font_colour
 	    objects.each do |item|
 	      flow width: "100%" do
 		if key == :@title
-		  para link(strong "#{item.instance_variable_get(key)}", stroke: "#f7f7f7").click do
+		  para link(strong "#{item.instance_variable_get(key)}", stroke: $font_colour).click do
 		    @window.clear do
 		      show(item)
 		    end
 		  end
+		elsif key == :@last_name
+		  para link(strong "#{item.instance_variable_get(key)}", stroke: $font_colour).click do
+		    @window.clear do
+		      show(item)
+		    end
+		  end
+		elsif key == :@product_loaned
+		  product_loaned = item.instance_variable_get(key)
+		  para strong "#{product_loaned.title unless product_loaned.nil?}", stroke: $font_colour
 		else
-		  para strong "#{item.instance_variable_get(key)}", stroke: "#f7f7f7"
+		  para strong "#{item.instance_variable_get(key)}", stroke: $font_colour
 		end
 	      end
 	    end
@@ -219,20 +236,20 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
 	
 	stack width: column_width, margin: 1 do
-	  para strong "Actions", stroke: "#f7f7f7"
+	  para strong "Actions", stroke: $font_colour
 	  objects.each do |item|
 	    flow width: "300%" do
-	      inscription link(strong "Sell/Loan", stroke: "#f7f7f7").click do
+	      inscription link(strong "Sell/Loan", stroke: $font_colour).click do
 		@window.clear do
 		  sell_loan(item)
 		end
 	      end
-	      inscription link(strong "Edit", stroke: "#f7f7f7").click do
+	      inscription link(strong "Edit", stroke: $font_colour).click do
 		@window.clear do
 		  edit(item)
 		end
 	      end
-	      inscription link(strong "Delete", stroke: "#f7f7f7").click do
+	      inscription link(strong "Delete", stroke: $font_colour).click do
 		if confirm("Are you sure you wanna delete this, bruv?")
 		  @window.clear do
 		    klass = objects.first.class
@@ -249,18 +266,14 @@ Shoes.app(title: "Inventory", width: 1200) do
     end
   end
 
-
   def form(hash, item)
     flow do
-      item.instance_variables.each do |key|
-	key_sym = key.to_s.gsub("@", "").to_sym
-	unless key == :@id
-	  flow do
-	    para strong key.to_s.gsub("@", ""), stroke: "#f7f7f7"
-	  end
-	  flow do
-	    hash[key_sym] = edit_line "#{item.instance_variable_get(key)}"
-	  end
+      item.class.instance_vars.each do |val|
+	flow do
+	  para strong column_name(val), stroke: $font_colour
+	end
+	flow do
+	  hash[val] = edit_line "#{item.instance_variable_get(to_ivar_name(val))}"
 	end
       end
     end
@@ -268,32 +281,42 @@ Shoes.app(title: "Inventory", width: 1200) do
 
 
   ##Helpers##
+
+  def column_name(instance_var)
+    instance_var.to_s.gsub("@", "").split("_").map(&:capitalize).join(" ")
+  end
+
+  def to_ivar_name(instance_var)
+    "@#{instance_var.to_s}".to_sym
+  end
+
+  def klass_hash
+    { 
+      Product => Proc.new { product },
+      Book => Proc.new { book },
+      Toy => Proc.new { toy },
+      Cd => Proc.new { cd }
+    }
+  end
   
-  def all_items(item)
-    para link(strong "All #{item.class}s", stroke: "#f7f7f7").click do
-      if item.class == Product
-	product
-      elsif item.class == Book
-	book
-      elsif item.class == Cd
-	cd
-      elsif item.class == Toy
-	toy
+  def all_items(klass)
+    para link(strong "All #{klass}s", stroke: $font_colour).click do
+      klass_hash.each do |k, v|
+        v.call if klass == k
       end
     end
   end
 
   def file_names(klass)
-    if klass == Product
-      "./products.yml"
-    elsif klass == Book
-      "./books.yml"
-    elsif klass == Cd
-      "./cds.yml"
-    elsif klass == Toy
-      "./toys.yml"
-    elsif klass == Customer
-      "./customers.yml"
+    file_names_hash = { 
+      Product => "./products.yml",
+      Book => "./books.yml", 
+      Cd => "./cds.yml", 
+      Toy => "./toys.yml", 
+      Customer => "./customers.yml"
+    }
+    file_names_hash.each do |k,v|
+      v if klass == k
     end
   end
 
@@ -302,35 +325,28 @@ Shoes.app(title: "Inventory", width: 1200) do
   
   def new(klass)
     file_name = file_names(klass)
-    title "New #{klass}", stroke: "#f7f7f7"
-    instance_vars = klass.all.first.instance_variables.map{|i| i.to_s.gsub("@","").to_sym}.reject{|i| i == :id}
-    form(@inventory_create = {}, klass.new(instance_vars))
+    title "New #{klass}", stroke: $font_colour
+    form(@inventory_create = {}, klass.new())
     flow margin: 5 do
       button "Submit" do
-	@inventory_create.map{|k,v| @inventory_create[k] = v.text}
+	@inventory_create.map{ |k,v| @inventory_create[k] = v.text }
 	klass.add(klass.new(@inventory_create))
 	klass.save(file_name)
 	@window.clear do
-	  if klass == Product
-	    product
-	  elsif klass == Book
-	    book
-	  elsif klass == Cd
-	    cd
-	  elsif klass == Toy
-	    toy
+	  klass_hash.each do |k, v|
+	    v if klass == k 
 	  end
 	end
       end
     end
     stack margin: 5 do
-      all_items(klass.all.first)
+      all_items(klass)
     end
   end
   
   def edit(item)
     file_name = file_names(item.class)
-    title "Edit #{item.title}", stroke: "#f7f7f7"
+    title "Edit #{item.title}", stroke: $font_colour
     form(@inventory_update = {}, item)
     stack margin: 5 do
       button "Submit" do
@@ -343,35 +359,40 @@ Shoes.app(title: "Inventory", width: 1200) do
       end
     end
     stack margin: 5 do
-      all_items(item)
+      all_items(item.class)
     end
   end
   
   def show(item)
     file_name = file_names(item.class)
     flow do
-      title "#{item.title}", stroke: "#f7f7f7"
+      if item.class == Customer
+	title "#{item.full_name}", stroke: $font_colour
+      else
+	title "#{item.title}", stroke: $font_colour
+      end
+	
       item.instance_variables.each do |key|
-	key_sym = key.to_s.gsub("@", "").to_sym
+	#key_sym = key.to_s.gsub("@", "").to_sym
 	flow do
-	  para strong key.to_s.gsub("@", ""), stroke: "#f7f7f7"
+	  para strong column_name(key), stroke: $font_colour
 	end
 	flow do
-	  para "#{item.instance_variable_get(key)}", stroke: "#f7f7f7"
+	  para "#{item.instance_variable_get(key)}", stroke: $font_colour
 	end
       end
       stack margin: 5 do
-	all_items(item)
+	all_items(item.class)
       end
     end
   end
   
   def sell_loan(item)
     file_name = file_names(item.class)
-    title "Sell or Loan \"#{item.title}\"", stroke: "#f7f7f7"
-    subtitle "Sell", stroke: "#f7f7f7"
+    title "Sell or Loan \"#{item.title}\"", stroke: $font_colour
+    subtitle "Sell", stroke: $font_colour
     flow do
-      para "Quantity:", stroke: "#f7f7f7"
+      para "Quantity:", stroke: $font_colour
       para
       @quantity = edit_line width: 25
       para
@@ -383,8 +404,8 @@ Shoes.app(title: "Inventory", width: 1200) do
 	end
       end
     end
-    subtitle "Loan", stroke: "#f7f7f7"
-    para "Select a customer", stroke: "#f7f7f7"
+    subtitle "Loan", stroke: $font_colour
+    para "Select a customer", stroke: $font_colour
     flow do
       @customers = {}
       Customer.all.each{|customer|
@@ -405,7 +426,7 @@ Shoes.app(title: "Inventory", width: 1200) do
       end
     end
     stack margin: 5 do
-      all_items(item)
+      all_items(item.class)
     end
   end
   
