@@ -5,9 +5,9 @@ require "pry"
 
 class CdSpec < MiniTest::Spec
   before do
-    @cd = Cd.new({ title: "Raspberry Beret", artist_name: "Prince", description: "Fun Prince song", release_date: Time.local(1985, 05, 15), stock_level: 19})
-    @cd2 = Cd.new({ title: "Treats", artist_name: "Sleigh Bells", description: "Sleigh Bells' debut album", release_date: Time.local(2010, 05, 24), stock_level: 25})
     Cd.delete_all
+    @cd = Cd.new({ title: "Raspberry Beret", artist_name: "Prince", description: "Fun Prince song", release_date: Time.local(1985, 05, 15), stock_level: 19 })
+    @cd2 = Cd.new({ title: "Treats", artist_name: "Sleigh Bells", description: "Sleigh Bells' debut album", release_date: Time.local(2010, 05, 24), stock_level: 25 })
   end
 
   describe Cd do

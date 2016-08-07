@@ -88,6 +88,5 @@ class CustomerSpec < MiniTest::Spec
 	Customer.find_by_last_name("Ta").first.id.must_equal @customer2.id
       end
     end 
-binding.pry
   end
 end

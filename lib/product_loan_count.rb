@@ -21,4 +21,8 @@ class ProductLoanCount
     end
     result
   end
+
+  def self.current
+    self.all.select{ |product_loaned| product_loaned.count > 0 }
+  end
 end

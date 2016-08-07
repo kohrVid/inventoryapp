@@ -24,7 +24,17 @@ class Product
   end
 
   def self.find_by_letter(letter)
-    Product.all.select {|item| item.title.start_with?(letter) }
+    self.all.select {|item| item.title.start_with?(letter) }
+  end
+
+  def self.find_fuzzy(term)
+    results = []
+    self.instance_vars.each do |col|
+      self.all.select do |item|
+       	results << item if item.send(col).to_s.downcase.include?(term.downcase)
+      end
+    end
+    results
   end
 
   def on_stock_threshold_reached(threshold)

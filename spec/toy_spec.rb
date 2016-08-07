@@ -46,7 +46,6 @@ class ToySpec < MiniTest::Spec
 	Toy.save("./toys.yml")
 	Toy.count.must_equal original_count + 2
 	File.exist?("./toys.yml").must_equal true
-	binding.pry
       end
 
       it "should be able to delete a toy" do
